@@ -17,19 +17,19 @@ public class Main {
     private static Integer maxcc = -1; 
     
 
-    private void generate(int width, int height, String outputFile){
+    private static void generate(int width, int height, String outputFile){
 	// generate grid and store it to outputFile...
 	//...            
     }
 
-    private boolean solve(String inputFile, String outputFile){
+    private static boolean solve(String inputFile, String outputFile){
 	// load grid from inputFile, solve it and store result to outputFile...
 	// ...
 
 	return false; 
     }
 
-    private boolean check(String inputFile){
+    private static boolean check(String inputFile){
 	// load grid from inputFile and check if it is solved... 
 	// ...
 
@@ -77,7 +77,7 @@ public class Main {
 		if(! cmd.hasOption("o")) throw new ParseException("Missing mandatory --output argument.");      
 		outputFile = cmd.getOptionValue( "o" );
 
-		boolean solved = solve(intputFile, outputFile); 
+		boolean solved = solve(inputFile, outputFile); 
 
 		System.out.println("SOLVED: " + solved);            
 	    }

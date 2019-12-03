@@ -4,7 +4,7 @@ public class L extends Piece
 {
 	public L(int orientation, int x, int y)
 	{
-		super(5, orientation, x, y);
+		super(5, 4, orientation, x, y);
 	}
 	
 	@Override

@@ -4,7 +4,7 @@ public class OneConnection extends Piece
 {
 	public OneConnection(int orientation, int x, int y)
 	{
-		super(1, orientation, x, y);
+		super(1, 4, orientation, x, y);
 	}
 	
 	@Override

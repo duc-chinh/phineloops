@@ -6,7 +6,7 @@ public class I extends Piece
 {
 	public I(int orientation, int x, int y)
 	{
-		super(2, orientation, x, y);
+		super(2, 2, orientation, x, y);
 	}
 	
 	@Override

@@ -46,6 +46,31 @@ public class Grid
 		return width;
 	}
 	
+	private boolean isValid(int x, int y)
+	{
+		Piece piece = grid[y][x];
+		if((piece.getX() == 0 && piece.getConnection(Orientation.WEST) != null)
+				|| (piece.getX() == width - 1 && piece.getConnection(Orientation.EAST) != null)
+				|| (piece.getY() == 0 && piece.getConnection(Orientation.NORTH) != null)
+				|| (piece.getY() == height - 1 && piece.getConnection(Orientation.SOUTH) != null))
+			return false;
+		if(piece.getX() > 0)
+		{
+			Boolean b = grid[piece.getY()][piece.getX() - 1].getConnection(Orientation.EAST);
+			if((b != null && piece.getConnection(Orientation.WEST) == null)
+					|| (b == null && piece.getConnection(Orientation.WEST) != null))
+				return false;
+		}
+		if(piece.getY() > 0)
+		{
+			Boolean b = grid[piece.getY() - 1][piece.getX()].getConnection(Orientation.SOUTH);
+			if((b != null && piece.getConnection(Orientation.NORTH) == null)
+					|| (b == null && piece.getConnection(Orientation.NORTH) != null))
+				return false;
+		}
+		return true;
+	}
+	
 	public static Grid generateGrid(int height, int width)
 	{
 		Grid g = new Grid(height, width);
@@ -65,13 +90,42 @@ public class Grid
 					else if(nb == 4) g.grid[y][x] = new X(x, y);
 					else if(nb == 5) g.grid[y][x] = new L(0, x, y);
 					g.grid[y][x].setRandomOrientation();
-				} while(!g.grid[y][x].isValid(g));
+				} while(!g.isValid(x, y));
 				g.grid[y][x].setRandomOrientation();
 			}
 		}
 		return g;
 	}
-	
+	/*
+	public boolean solve(int x, int y)
+	{
+		System.out.println("(" + x + ", " + y + ")");
+		boolean solved = false;
+		grid[y][x].setOrientation(0);
+		for(int i = 0; i < grid[y][x].getOrientationsMax(); i++)
+		{
+			if(isValid(x, y))
+			{
+				if(x == width - 1)
+				{
+					if(y == height - 1)
+					{
+						solved = true;
+						break;
+					}
+					else
+						solved = solve(0, y + 1);
+				}
+				else
+					solved = solve(x + 1, y);
+			}
+			else
+				grid[y][x].rotate();
+		}
+		System.out.println("SOLVED: " + solved);
+		return solved;
+	}
+	*/
 	public void generateFile(String outputFile)
 	{
 		BufferedWriter b_out = null;
@@ -133,6 +187,8 @@ public class Grid
 		Random r = new Random();
 		Grid g = Grid.generateGrid(r.nextInt(51), r.nextInt(51));
 		g.printGrid();
+		// g.solve(0, 0);
+		// g.printGrid();
 		// g.generateFile("niveau1.txt");
 		
 		return;

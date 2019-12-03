@@ -6,14 +6,16 @@ import java.util.Random;
 public abstract class Piece
 {
 	private final int number;
+	private final int orientationsMax;
 	private int orientation;
 	private int x;
 	private int y;
 	private HashMap<Orientation, Boolean> connections;
 
-	public Piece(int number, int orientation, int x, int y)
+	public Piece(int number, int orientationsMax, int orientation, int x, int y)
 	{
 		this.number = number;
+		this.orientationsMax = orientationsMax;
 		this.orientation = orientation;
 		this.x = x;
 		this.y = y;
@@ -26,6 +28,11 @@ public abstract class Piece
 	public int getNumber()
 	{
 		return number;
+	}
+	
+	public int getOrientationsMax()
+	{
+		return orientationsMax;
 	}
 
 	public int getOrientation()
@@ -71,7 +78,7 @@ public abstract class Piece
 
 	public void rotate()
 	{
-		if(orientation == 3) orientation = 0;
+		if(orientation == orientationsMax) orientation = 0;
 		else orientation++;
 		setConnections();
 		
@@ -103,29 +110,5 @@ public abstract class Piece
 		}
 		
 		return;
-	}
-	
-	public boolean isValid(Grid grid)
-	{
-		if((x == 0 && connections.get(Orientation.WEST) != null)
-				|| (x == grid.getWidth() - 1 && connections.get(Orientation.EAST) != null)
-				|| (y == 0 && connections.get(Orientation.NORTH) != null)
-				|| (y == grid.getHeight() - 1 && connections.get(Orientation.SOUTH) != null))
-			return false;
-		if(x > 0)
-		{
-			Boolean b = grid.getPiece(x - 1, y).getConnection(Orientation.EAST);
-			if((b != null && connections.get(Orientation.WEST) == null)
-					|| (b == null && connections.get(Orientation.WEST) != null))
-				return false;
-		}
-		if(y > 0)
-		{
-			Boolean b = grid.getPiece(x, y - 1).getConnection(Orientation.SOUTH);
-			if((b != null && connections.get(Orientation.NORTH) == null)
-					|| (b == null && connections.get(Orientation.NORTH) != null))
-				return false;
-		}
-		return true;
 	}
 }

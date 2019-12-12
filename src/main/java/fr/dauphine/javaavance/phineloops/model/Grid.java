@@ -82,7 +82,8 @@ public class Grid
 				g.grid[y][x] = null;
 				do
 				{
-					int nb = r.nextInt(6);
+					int nb = r.nextInt(5) + 1;
+		
 					if(nb == 0) g.grid[y][x] = new Empty(x, y);
 					else if(nb == 1) g.grid[y][x] = new OneConnection(0, x, y);
 					else if(nb == 2) g.grid[y][x] = new I(0, x, y);
@@ -91,19 +92,26 @@ public class Grid
 					else if(nb == 5) g.grid[y][x] = new L(0, x, y);
 					g.grid[y][x].setRandomOrientation();
 				} while(!g.isValid(x, y));
-				g.grid[y][x].setRandomOrientation();
 			}
 		}
+		
+		for(int y = 0; y < height; y++)
+		{
+			for(int x = 0; x < width; x++)
+				g.grid[y][x].setRandomOrientation();
+		}
+		
 		return g;
 	}
 	/*
 	public boolean solve(int x, int y)
 	{
-		System.out.println("(" + x + ", " + y + ")");
 		boolean solved = false;
-		grid[y][x].setOrientation(0);
+			
 		for(int i = 0; i < grid[y][x].getOrientationsMax(); i++)
 		{
+			grid[y][x].setOrientation(i);
+			System.out.println("=== " + grid[y][x].getNumber() + " - " + grid[y][x].getOrientation() + " ===");
 			if(isValid(x, y))
 			{
 				if(x == width - 1)
@@ -119,13 +127,12 @@ public class Grid
 				else
 					solved = solve(x + 1, y);
 			}
-			else
-				grid[y][x].rotate();
+			if(solved) break;
 		}
-		System.out.println("SOLVED: " + solved);
+		
 		return solved;
 	}
-	*/
+	
 	public void generateFile(String outputFile)
 	{
 		BufferedWriter b_out = null;
@@ -167,7 +174,7 @@ public class Grid
 		
 		return;
 	}
-	
+	*/
 	public void printGrid()
 	{
 		for(int y = 0; y < height; y++)
@@ -184,10 +191,9 @@ public class Grid
 	
 	public static void main(String[] args)
 	{
-		Random r = new Random();
-		Grid g = Grid.generateGrid(r.nextInt(51), r.nextInt(51));
+		Grid g = Grid.generateGrid(5, 5);
 		g.printGrid();
-		// g.solve(0, 0);
+		// System.out.println("SOLVED: " + g.solve(0, 0));
 		// g.printGrid();
 		// g.generateFile("niveau1.txt");
 		

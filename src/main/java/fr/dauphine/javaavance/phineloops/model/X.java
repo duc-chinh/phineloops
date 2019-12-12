@@ -8,12 +8,6 @@ public class X extends Piece
 	}
 	
 	@Override
-	public void rotate()
-	{
-		return;
-	}
-	
-	@Override
 	public void setRandomOrientation()
 	{
 		return;

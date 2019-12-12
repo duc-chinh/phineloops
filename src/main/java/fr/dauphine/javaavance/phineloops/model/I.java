@@ -19,15 +19,6 @@ public class I extends Piece
 	}
 	
 	@Override
-	public void rotate()
-	{
-		if(super.getOrientation() == 1) super.setOrientation(0);
-		else super.setOrientation(1);
-		
-		return;
-	}
-	
-	@Override
 	protected void setConnections()
 	{
 		int orientation = super.getOrientation();

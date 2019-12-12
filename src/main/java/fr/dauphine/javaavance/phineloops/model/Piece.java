@@ -43,6 +43,7 @@ public abstract class Piece
 	public void setOrientation(int orientation)
 	{
 		this.orientation = orientation;
+		setConnections();
 		return;
 	}
 	
@@ -75,16 +76,7 @@ public abstract class Piece
 		else connections.replace(o, b);
 		return;
 	}
-
-	public void rotate()
-	{
-		if(orientation == orientationsMax) orientation = 0;
-		else orientation++;
-		setConnections();
-		
-		return;
-	}
-	
+	/*
 	public boolean isFullyConnected()
 	{
 		return ((connections.get(Orientation.NORTH) == null || connections.get(Orientation.NORTH))
@@ -92,8 +84,8 @@ public abstract class Piece
 				&& (connections.get(Orientation.WEST) == null || connections.get(Orientation.WEST))
 				&& (connections.get(Orientation.EAST) == null || connections.get(Orientation.EAST)));
 	}
-	
-	public void compare(Orientation o, Piece p)
+	*/
+	public boolean compare(Orientation o, Piece p)
 	{
 		Boolean neighborValue = null;
 		Orientation toCompare = null;
@@ -107,8 +99,9 @@ public abstract class Piece
 		{
 			this.setConnection(o, true);
 			p.setConnection(toCompare, true);
+			return true;
 		}
-		
-		return;
+		else
+			return false;
 	}
 }

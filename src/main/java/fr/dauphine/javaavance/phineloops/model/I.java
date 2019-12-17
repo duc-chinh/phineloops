@@ -1,12 +1,14 @@
 package fr.dauphine.javaavance.phineloops.model;
 
 import java.util.Random;
+import fr.dauphine.javaavance.phineloops.view.IDrawer;
 
 public class I extends Piece
 {
 	public I(int orientation, int x, int y)
 	{
 		super(2, 2, orientation, x, y);
+		super.drawer=new IDrawer(this);
 	}
 	
 	@Override

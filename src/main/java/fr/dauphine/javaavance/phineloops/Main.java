@@ -6,6 +6,10 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Option.Builder;
+
+import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.view.Gui;
+
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
@@ -19,7 +23,12 @@ public class Main {
 
     private static void generate(int width, int height, String outputFile){
 	// generate grid and store it to outputFile...
-	//...            
+    	Grid g = Grid.generateGrid(width, height);
+		g.printGrid();
+		
+		new Gui(g);
+		//g.generateFile("niveau1.txt");
+
     }
 
     private static boolean solve(String inputFile, String outputFile){

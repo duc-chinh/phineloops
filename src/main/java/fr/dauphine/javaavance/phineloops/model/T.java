@@ -1,10 +1,13 @@
 package fr.dauphine.javaavance.phineloops.model;
 
+import fr.dauphine.javaavance.phineloops.view.TDrawer;
+
 public class T extends Piece
 {
 	public T(int orientation, int x, int y)
 	{
 		super(3, 4, orientation, x, y);
+		super.drawer=new TDrawer(this);
 	}
 	
 	@Override

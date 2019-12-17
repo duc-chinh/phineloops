@@ -1,10 +1,13 @@
 package fr.dauphine.javaavance.phineloops.model;
 
+import fr.dauphine.javaavance.phineloops.view.XDrawer;
+
 public class X extends Piece
 {
 	public X(int x, int y)
 	{
 		super(4, 0, 0, x, y);
+		super.drawer=new XDrawer(this);
 	}
 	
 	@Override

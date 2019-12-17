@@ -1,10 +1,13 @@
 package fr.dauphine.javaavance.phineloops.model;
 
+import fr.dauphine.javaavance.phineloops.view.OneConnectionDrawer;
+
 public class OneConnection extends Piece
 {
 	public OneConnection(int orientation, int x, int y)
 	{
 		super(1, 4, orientation, x, y);
+		super.drawer=new OneConnectionDrawer(this);
 	}
 	
 	@Override

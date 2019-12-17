@@ -1,10 +1,13 @@
 package fr.dauphine.javaavance.phineloops.model;
 
+import fr.dauphine.javaavance.phineloops.view.EmptyDrawer;
+
 public class Empty extends Piece
 {
 	public Empty(int x, int y)
 	{
 		super(0, 0, 0, x, y);
+		super.drawer=new EmptyDrawer(this);
 	}
 	
 	@Override

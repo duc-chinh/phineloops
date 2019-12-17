@@ -3,6 +3,8 @@ package fr.dauphine.javaavance.phineloops.model;
 import java.util.HashMap;
 import java.util.Random;
 
+import fr.dauphine.javaavance.phineloops.view.Drawer;
+
 public abstract class Piece
 {
 	private final int number;
@@ -11,7 +13,8 @@ public abstract class Piece
 	private int x;
 	private int y;
 	private HashMap<Orientation, Boolean> connections;
-
+	public Drawer drawer;
+	
 	public Piece(int number, int orientationsMax, int orientation, int x, int y)
 	{
 		this.number = number;

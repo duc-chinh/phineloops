@@ -1,9 +1,8 @@
 package fr.dauphine.javaavance.phineloops.model;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Random;
+
+import fr.dauphine.javaavance.phineloops.view.Gui;
 
 public class Grid
 {
@@ -193,6 +192,7 @@ public class Grid
 	{
 		Grid g = Grid.generateGrid(5, 5);
 		g.printGrid();
+		new Gui(g);
 		// System.out.println("SOLVED: " + g.solve(0, 0));
 		// g.printGrid();
 		// g.generateFile("niveau1.txt");

@@ -25,7 +25,6 @@ public class Main {
 	// generate grid and store it to outputFile...
     	Grid g = Grid.generateGrid(width, height);
 		g.printGrid();
-		
 		new Gui(g);
 		//g.generateFile("niveau1.txt");
 

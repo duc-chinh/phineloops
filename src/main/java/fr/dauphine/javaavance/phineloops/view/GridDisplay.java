@@ -2,14 +2,17 @@ package fr.dauphine.javaavance.phineloops.view;
 
 import java.awt.Graphics;
 import javax.swing.JPanel;
+
+import fr.dauphine.javaavance.phineloops.controller.MyListener;
 import fr.dauphine.javaavance.phineloops.model.Grid;
 
 public class GridDisplay  extends JPanel{
-	private Grid level;
-	
-	public GridDisplay(Grid level, Gui g) {
+	private Grid level;	
+	private MyListener mymouse;
+	public GridDisplay(Grid level, Gui g, MyListener mymouse) {
 		// TODO Auto-generated constructor stub
 		this.level=level;
+		this.mymouse=mymouse;
 	}
 	@Override
 	protected void paintComponent(Graphics g) {

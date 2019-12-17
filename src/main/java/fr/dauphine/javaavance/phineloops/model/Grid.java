@@ -81,7 +81,7 @@ public class Grid
 				g.grid[y][x] = null;
 				do
 				{
-					int nb = r.nextInt(5) + 1;
+					int nb = r.nextInt(5);
 		
 					if(nb == 0) g.grid[y][x] = new Empty(x, y);
 					else if(nb == 1) g.grid[y][x] = new OneConnection(0, x, y);
@@ -93,7 +93,8 @@ public class Grid
 				} while(!g.isValid(x, y));
 			}
 		}
-		
+		g.printGrid();
+		System.out.println();
 		for(int y = 0; y < height; y++)
 		{
 			for(int x = 0; x < width; x++)

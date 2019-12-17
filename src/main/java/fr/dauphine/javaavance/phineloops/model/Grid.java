@@ -93,8 +93,8 @@ public class Grid
 				} while(!g.isValid(x, y));
 			}
 		}
-		g.printGrid();
-		System.out.println();
+		//g.printGrid();
+		//System.out.println();
 		for(int y = 0; y < height; y++)
 		{
 			for(int x = 0; x < width; x++)
@@ -191,7 +191,7 @@ public class Grid
 	
 	public static void main(String[] args)
 	{
-		Grid g = Grid.generateGrid(5, 5);
+		Grid g = Grid.generateGrid(5,5);
 		g.printGrid();
 		new Gui(g);
 		// System.out.println("SOLVED: " + g.solve(0, 0));

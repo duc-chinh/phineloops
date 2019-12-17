@@ -15,7 +15,7 @@ public class Gui {
 		this.level=level;
 		this.mymouse= new MyListener(this);
 		this.frame= new JFrame("PhineLoops Game");
-		this.leveldisplay= new GridDisplay(this.level,this,mymouse);
+		this.leveldisplay= new GridDisplay(this.level,this);
 		frame.add(leveldisplay);
 		frame.setSize(level.getWidth()*100,level.getHeight()*105);
 		frame.setLocation(0,0);
@@ -25,5 +25,10 @@ public class Gui {
 		frame.setVisible(true);
 		
 	}
-	
+	public Grid getLevel() {
+		return level;
+	}
+	public GridDisplay getLeveldisplay() {
+		return leveldisplay;
+	}
 }

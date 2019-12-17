@@ -20,16 +20,14 @@ public abstract class Drawer {
 			img = ImageIO.read(new File("ImagesPieces/"+p.getNumber()+".png"));
 		} catch (IOException e) {
 		}
-	
 
 	}
-	
+
 	public void draw(Graphics g) {
-		System.out.print(" "+p.getOrientation());
 		AffineTransform transformer = new AffineTransform();
 		transformer.rotate(((90*p.getOrientation())*Math.PI)/180, img.getWidth()/2, img.getHeight()/2);
 		AffineTransformOp op = new AffineTransformOp(transformer,AffineTransformOp.TYPE_BILINEAR);
-		img = op.filter(img, null);
-		g.drawImage(img, p.getX()*100, p.getY()*100,100,100, null);
+		BufferedImage im= op.filter(img, null);
+		g.drawImage(im, p.getX()*100, p.getY()*100,100,100, null);
 	}
 }

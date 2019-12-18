@@ -17,18 +17,17 @@ public class MyListener extends MouseAdapter{
 	public void mouseClicked(MouseEvent e) {
 		for(int i=0;i<g.getLevel().getWidth();i++) {
 			for(int j=0;j<g.getLevel().getHeight();j++) {
-				int posX = g.getLevel().getPiece(i,j).getX()*100;
-				int posY = g.getLevel().getPiece(i,j).getY()*100;
-				if(e.getX()>=posX && e.getX()<= posX+100 && e.getY()>=posY && e.getY()<= posY+100) {
+				int posX = g.getLevel().getPiece(i,j).getX()*114;
+				int posY = g.getLevel().getPiece(i,j).getY()*114;
+				if(e.getX()>posX && e.getX()<(posX+114) && e.getY()>posY+30 && e.getY()<(posY+144)) {
 					if (g.getLevel().getPiece(i, j) instanceof Empty) {
-						System.out.println("Empty");
 						return;
-					}
-					if(g.getLevel().getPiece(i, j).getOrientation()!= g.getLevel().getPiece(i, j).getOrientationsMax()) {
-						g.getLevel().getPiece(i, j).setOrientation(g.getLevel().getPiece(i, j).getOrientation()+1);
-					}else {
-						g.getLevel().getPiece(i, j).setOrientation(0);
-					}
+					}else
+						if(g.getLevel().getPiece(i, j).getOrientation()< g.getLevel().getPiece(i, j).getOrientationsMax()-1) {
+							g.getLevel().getPiece(i, j).setOrientation(g.getLevel().getPiece(i, j).getOrientation()+1);
+						}else {
+							g.getLevel().getPiece(i, j).setOrientation(0);
+						}
 				}
 			}
 		}

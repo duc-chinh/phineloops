@@ -84,8 +84,8 @@ public class Grid
 				g.grid[y][x] = null;
 				do
 				{
-					int nb = r.nextInt(5);
-		
+					int nb = r.nextInt(6);
+					
 					if(nb == 0) g.grid[y][x] = new Empty(x, y);
 					else if(nb == 1) g.grid[y][x] = new OneConnection(0, x, y);
 					else if(nb == 2) g.grid[y][x] = new I(0, x, y);

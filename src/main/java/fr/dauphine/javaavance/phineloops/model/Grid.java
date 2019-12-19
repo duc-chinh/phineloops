@@ -96,8 +96,7 @@ public class Grid
 				} while(!g.isValid(x, y));
 			}
 		}
-		//g.printGrid();
-		//System.out.println();
+
 		for(int y = 0; y < height; y++)
 		{
 			for(int x = 0; x < width; x++)
@@ -106,6 +105,26 @@ public class Grid
 		
 		return g;
 	}
+	
+	public boolean check()
+	{
+		boolean solved = true;
+		for(int y = 0; y < height; y++)
+		{
+			for(int x = 0; x < width; x++)
+			{
+				if(!isValid(x, y))
+				{
+					solved = false;
+					break;
+				}
+			}
+			if(!solved) break;
+		}
+		
+		return solved;
+	}
+	
 	/*
 	public boolean solve(int x, int y)
 	{
@@ -192,10 +211,16 @@ public class Grid
 		return;
 	}
 	
+	public void endGame(Gui g)
+	{
+		g.showMessage();
+		System.exit(0);
+		return;
+	}
+	
 	public static void main(String[] args)
 	{
 		Grid g = Grid.generateGrid(5,5);
-		g.printGrid();
 		new Gui(g);
 		// System.out.println("SOLVED: " + g.solve(0, 0));
 		// g.printGrid();

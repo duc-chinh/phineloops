@@ -79,6 +79,14 @@ public abstract class Piece
 		else connections.replace(o, b);
 		return;
 	}
+	
+	public void rotate()
+	{
+		orientation++;
+		if(orientation >= orientationsMax) orientation = 0;
+		setConnections();
+		return;
+	}
 	/*
 	public boolean isFullyConnected()
 	{

@@ -38,10 +38,9 @@ public class Main {
 	}
 
 	private static boolean check(String inputFile){
-		// load grid from inputFile and check if it is solved... 
-		// ...
-
-		return false; 
+		// load grid from inputFile and check if it is solved ...
+		Grid grid = Grid.generateGridWithFile(inputFile);
+		return grid.check(); 
 	}
 
 	public static void main(String[] args) {

@@ -1,6 +1,9 @@
 package fr.dauphine.javaavance.phineloops.model;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
@@ -13,7 +16,7 @@ public class Grid
 	private int height;
 	private int width;
 	private int unconnectedSides;
-	
+
 	public Grid(int height, int width)
 	{
 		this.height = height;
@@ -21,33 +24,33 @@ public class Grid
 		grid = new Piece[this.height][this.width];
 		unconnectedSides = 0;
 	}
-	
+
 	public Piece getPiece(int x, int y)
 	{
 		return grid[y][x];
 	}
-	
+
 	public void setUnconnectedSides(int unconnectedSides)
 	{
 		this.unconnectedSides = unconnectedSides;
 		return;
 	}
-	
+
 	public int getUnconnectedSides()
 	{
 		return unconnectedSides;
 	}
-	
+
 	public int getHeight()
 	{
 		return height;
 	}
-	
+
 	public int getWidth()
 	{
 		return width;
 	}
-	
+
 	private boolean isValid(int x, int y)
 	{
 		Piece piece = grid[y][x];
@@ -72,7 +75,7 @@ public class Grid
 		}
 		return true;
 	}
-	
+
 	public static Grid generateGrid(int height, int width)
 	{
 		Grid g = new Grid(height, width);
@@ -85,7 +88,7 @@ public class Grid
 				do
 				{
 					int nb = r.nextInt(6);
-					
+
 					if(nb == 0) g.grid[y][x] = new Empty(x, y);
 					else if(nb == 1) g.grid[y][x] = new OneConnection(0, x, y);
 					else if(nb == 2) g.grid[y][x] = new I(0, x, y);
@@ -102,10 +105,61 @@ public class Grid
 			for(int x = 0; x < width; x++)
 				g.grid[y][x].setRandomOrientation();
 		}
-		
+
 		return g;
 	}
-	
+
+	public static Grid generateGridWithFile(String inputFile)
+	{
+		Grid g =null;
+		BufferedReader b_in=null;
+		FileReader f_in =null;
+		String ligne;
+		try 
+		{
+			f_in = new FileReader(inputFile);
+			b_in= new BufferedReader(f_in);
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File not found or Error open file");
+		}
+		try {
+			ligne =b_in.readLine();
+			int height = Integer.parseInt(ligne);
+			ligne= b_in.readLine();
+			int width = Integer.parseInt(ligne);
+			g= new Grid(height,width);
+			int x =0 ,y =0;
+			while((ligne=b_in.readLine())!=null)
+			{
+				int numberPiece =Character.getNumericValue(ligne.charAt(0));
+				int numberOrientation =Character.getNumericValue(ligne.charAt(2));
+				if(numberPiece == 0) g.grid[y][x] = new Empty(x, y);
+				else if(numberPiece == 1) g.grid[y][x] = new OneConnection(numberOrientation, x, y);
+				else if(numberPiece == 2) g.grid[y][x] = new I(numberOrientation, x, y);
+				else if(numberPiece == 3) g.grid[y][x] = new T(numberOrientation, x, y);
+				else if(numberPiece == 4) g.grid[y][x] = new X(numberOrientation, y);
+				else if(numberPiece == 5) g.grid[y][x] = new L(numberOrientation, x, y);
+				if(x==width-1) {
+					x=0;
+					y++;
+				}else {
+					x++;
+				}
+
+			}
+			b_in.close();
+			f_in.close();
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return g;
+	}
+
+
 	public boolean check()
 	{
 		boolean solved = true;
@@ -121,15 +175,14 @@ public class Grid
 			}
 			if(!solved) break;
 		}
-		
 		return solved;
 	}
-	
+
 	/*
 	public boolean solve(int x, int y)
 	{
 		boolean solved = false;
-			
+
 		for(int i = 0; i < grid[y][x].getOrientationsMax(); i++)
 		{
 			grid[y][x].setOrientation(i);
@@ -151,10 +204,10 @@ public class Grid
 			}
 			if(solved) break;
 		}
-		
+
 		return solved;
 	}
-	*/
+	 */
 	public void generateFile(String outputFile)
 	{
 		BufferedWriter b_out = null;
@@ -163,7 +216,7 @@ public class Grid
 		{
 			f_out = new FileWriter(outputFile);
 			b_out = new BufferedWriter(f_out);
-			
+
 			b_out.write("" + height);
 			b_out.newLine();
 			b_out.write("" + width);
@@ -193,10 +246,11 @@ public class Grid
 				e.printStackTrace();
 			}
 		}
-		
+
 		return;
 	}
-	
+
+
 	public void printGrid()
 	{
 		for(int y = 0; y < height; y++)
@@ -207,25 +261,30 @@ public class Grid
 			}
 			System.out.println();
 		}
-		
+
 		return;
 	}
-	
+
 	public void endGame(Gui g)
 	{
 		g.showMessage();
 		System.exit(0);
 		return;
 	}
-	
+
 	public static void main(String[] args)
 	{
-		Grid g = Grid.generateGrid(5,5);
-		new Gui(g);
-		// System.out.println("SOLVED: " + g.solve(0, 0));
-		// g.printGrid();
-		//g.generateFile("niveau1.txt");
-		
-		return;
+		/* Generator test*/
+		/*Grid g = Grid.generateGrid(5,5);
+		g.generateFile("niveau1.txt");
+		g.printGrid();
+		new Gui(g);*/
+
+
+		/*Check test*/
+		Grid grid = Grid.generateGridWithFile("instances/public/grid_8x8_dist.0_vflip.false_hflip.false_messedup.false_id.3.dat");
+		System.out.println("SOLVED:"+grid.check());
+		new Gui(grid);
+
 	}
 }

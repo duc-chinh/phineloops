@@ -31,10 +31,7 @@ public class Main {
 	}
 
 	private static boolean solve(String inputFile, String outputFile){
-		// load grid from inputFile, solve it and store result to outputFile...
-		// ...
-
-		return false; 
+		return Grid.solve(inputFile, outputFile);
 	}
 
 	private static boolean check(String inputFile){

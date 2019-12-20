@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+import org.chocosolver.solver.Model;
+import org.chocosolver.solver.variables.IntVar;
+
 import fr.dauphine.javaavance.phineloops.view.Gui;
 
 public class Grid
@@ -119,43 +122,44 @@ public class Grid
 		{
 			f_in = new FileReader(inputFile);
 			b_in= new BufferedReader(f_in);
+			try {
+				ligne =b_in.readLine();
+				int height = Integer.parseInt(ligne);
+				ligne= b_in.readLine();
+				int width = Integer.parseInt(ligne);
+				g= new Grid(height,width);
+				int x =0 ,y =0;
+				while((ligne=b_in.readLine())!=null)
+				{
+					int numberPiece =Character.getNumericValue(ligne.charAt(0));
+					int numberOrientation =Character.getNumericValue(ligne.charAt(2));
+					if(numberPiece == 0) g.grid[y][x] = new Empty(x, y);
+					else if(numberPiece == 1) g.grid[y][x] = new OneConnection(numberOrientation, x, y);
+					else if(numberPiece == 2) g.grid[y][x] = new I(numberOrientation, x, y);
+					else if(numberPiece == 3) g.grid[y][x] = new T(numberOrientation, x, y);
+					else if(numberPiece == 4) g.grid[y][x] = new X(numberOrientation, y);
+					else if(numberPiece == 5) g.grid[y][x] = new L(numberOrientation, x, y);
+					if(x==width-1) {
+						x=0;
+						y++;
+					}else {
+						x++;
+					}
+
+				}
+				b_in.close();
+				f_in.close();
+			} 
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		catch(FileNotFoundException e)
 		{
 			System.out.println("File not found or Error open file");
 		}
-		try {
-			ligne =b_in.readLine();
-			int height = Integer.parseInt(ligne);
-			ligne= b_in.readLine();
-			int width = Integer.parseInt(ligne);
-			g= new Grid(height,width);
-			int x =0 ,y =0;
-			while((ligne=b_in.readLine())!=null)
-			{
-				int numberPiece =Character.getNumericValue(ligne.charAt(0));
-				int numberOrientation =Character.getNumericValue(ligne.charAt(2));
-				if(numberPiece == 0) g.grid[y][x] = new Empty(x, y);
-				else if(numberPiece == 1) g.grid[y][x] = new OneConnection(numberOrientation, x, y);
-				else if(numberPiece == 2) g.grid[y][x] = new I(numberOrientation, x, y);
-				else if(numberPiece == 3) g.grid[y][x] = new T(numberOrientation, x, y);
-				else if(numberPiece == 4) g.grid[y][x] = new X(numberOrientation, y);
-				else if(numberPiece == 5) g.grid[y][x] = new L(numberOrientation, x, y);
-				if(x==width-1) {
-					x=0;
-					y++;
-				}else {
-					x++;
-				}
 
-			}
-			b_in.close();
-			f_in.close();
-		} 
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 		return g;
 	}
 
@@ -178,6 +182,16 @@ public class Grid
 		return solved;
 	}
 
+	public static boolean solve(String inputFile, String outputFile) {
+		Grid grid = Grid.generateGridWithFile(inputFile);
+		Model model = new Model ("PhineLoop solver");
+		System.out.println("test choco jar execution for maven");
+		//define a two dimensional array named for instance numberP[][] for which each cell is of type IntVar for the number of the Piece
+		IntVar [][] numberP = new  IntVar [grid.height][grid.width];
+		//define a two dimensional array named for instance orientationP[][] for which each cell is of type IntVar for the orientation of the Piece
+		IntVar [][] orientationP = new  IntVar [grid.height][grid.width];
+		return false;
+	}
 	/*
 	public boolean solve(int x, int y)
 	{
@@ -282,9 +296,12 @@ public class Grid
 
 
 		/*Check test*/
-		Grid grid = Grid.generateGridWithFile("instances/public/grid_8x8_dist.0_vflip.false_hflip.false_messedup.false_id.3.dat");
+		/*Grid grid = Grid.generateGridWithFile("instances/public/grid_8x8_dist.0_vflip.false_hflip.false_messedup.false_id.3.dat");
 		System.out.println("SOLVED:"+grid.check());
-		new Gui(grid);
+		new Gui(grid);*/
+
+		/*Solver test*/
+		Grid.solve("instances/public/grid_8x8_dist.0_vflip.false_hflip.false_messedup.false_id.3.dat","testsolve");
 
 	}
 }

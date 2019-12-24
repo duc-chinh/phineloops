@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import fr.dauphine.javaavance.phineloops.controller.MyActionListener;
 import fr.dauphine.javaavance.phineloops.controller.MyListener;
 import fr.dauphine.javaavance.phineloops.model.Grid;
 
@@ -20,24 +21,17 @@ public class Gui
 	private MyListener mymouse;
 	private JButton solveButton;
 	private JButton generateButton;
-	
+	private MyActionListener myclick;
 	public Gui(Grid level)
 	{
 		this.level = level;
 		this.mymouse = new MyListener(this);
+		this.myclick= new MyActionListener(this);
 		this.frame = new JFrame("PhineLoops Game");
 		this.leveldisplay = new GridDisplay(this.level, this);
 		//SOLVE BUTTON
 		this.solveButton = new JButton("SOLVE");
-		this.solveButton.addActionListener(new ActionListener()
-		{	
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				// TODO Auto-generated method stub
-				System.out.println("add methode solve here for interface");
-			}
-		});
+		this.solveButton.addActionListener(myclick);
 		frame.add(leveldisplay, BorderLayout.CENTER);
 		frame.add(solveButton, BorderLayout.EAST);
 		frame.setSize(level.getWidth() * 114 + 70, level.getHeight() * 114 + 30);
@@ -59,6 +53,9 @@ public class Gui
 		return leveldisplay;
 	}
 	
+	public JFrame getFrame() {
+		return frame;
+	}
 	public void showMessage()
 	{
 		JOptionPane.showMessageDialog(frame, "You found the solution!",

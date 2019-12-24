@@ -31,7 +31,10 @@ public class Main {
 	}
 
 	private static boolean solve(String inputFile, String outputFile){
-		return false;
+		Grid g = Grid.generateGridWithFile(inputFile);
+		boolean solved= g.solve();
+		g.generateFile(outputFile);
+		return solved;
 	}
 
 	private static boolean check(String inputFile){

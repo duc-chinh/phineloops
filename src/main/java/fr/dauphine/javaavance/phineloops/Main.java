@@ -31,7 +31,7 @@ public class Main {
 	}
 
 	private static boolean solve(String inputFile, String outputFile){
-		return Grid.solve(inputFile, outputFile);
+		return false;
 	}
 
 	private static boolean check(String inputFile){

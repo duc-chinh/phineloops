@@ -17,7 +17,7 @@ public class MyActionListener  implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		g.getLevel().solve();
-		if(g.getLevel().check()) g.getLeveldisplay().repaint();
+		if(g.getLevel().solve()) g.getLeveldisplay().repaint();
 		else {
 			JOptionPane.showMessageDialog(g.getFrame(), "No solution for this level!",
 					"PhineLoops Game - Sorry!", JOptionPane.INFORMATION_MESSAGE);

@@ -138,7 +138,7 @@ public class Grid
 					else if(numberPiece == 1) g.grid[y][x] = new OneConnection(numberOrientation, x, y);
 					else if(numberPiece == 2) g.grid[y][x] = new I(numberOrientation, x, y);
 					else if(numberPiece == 3) g.grid[y][x] = new T(numberOrientation, x, y);
-					else if(numberPiece == 4) g.grid[y][x] = new X(numberOrientation, y);
+					else if(numberPiece == 4) g.grid[y][x] = new X(x,y);
 					else if(numberPiece == 5) g.grid[y][x] = new L(numberOrientation, x, y);
 					if(x==width-1) {
 						x=0;
@@ -198,133 +198,157 @@ public class Grid
 		int n=0;
 		String op1="";
 		String op2="";
+
 		for(int i=0;i<height;i++) {
 			for(int j=0;j<width;j++) {
 				int number =grid[i][j].getNumber();
 				Constraint[] c = new Constraint[4];
-				if(number!=0) {
-					//for each square define an array of square that is of size equal to the number of side can be connected
-					//// initialize the values for each square using model.arithm connections with neighbor must be connected
-					if(i != 0) {
-						numberN = grid[i-1][j].getNumber();
-						if(number==5) {
-							if(numberN==0) {c[0]=model.member(orientationP[i][j],new int[] {1,2});model.post(c[0]);}
-							else if(numberN==1)model.ifThenElse(model.member(orientationP[i][j],new int[] {0,3}),c[0]=model.arithm(orientationP[i-1][j],"=",2),c[0]=model.member(orientationP[i-1][j],new int [] {0,1,3}));
-							else if(numberN==2)model.ifThenElse(model.member(orientationP[i][j],new int[] {0,3}),c[0]=model.arithm(orientationP[i-1][j],"=",0),c[0]=model.arithm(orientationP[i-1][j],"=",1));
-							else if(numberN==3)model.ifThenElse(model.member(orientationP[i][j],new int[] {0,3}),c[0]=model.member(orientationP[i-1][j],new int [] {1,2,3}),c[0]=model.arithm(orientationP[i-1][j],"=",0));
-							else if(numberN==4){c[0]=model.member(orientationP[i][j],new int[] {0,3}); model.post(c[0]);}
-							else model.ifThenElse(model.member(orientationP[i][j],new int[] {0,3}),c[0]=model.member(orientationP[i-1][j],new int[]{1,2}),c[0]=model.member(orientationP[i-1][j],new int[]{0,3}));
-						}else {
-							if(number==1 ||number==2 ||number==4) {n=0;op1="!="; op2="=";}
-							else if(number==3) {n=2;op1="=";op2="!=";}
-							if(numberN==0) {c[0]=model.arithm(orientationP[i][j],op1,n); model.post(c[0]);}
-							else if(numberN==1)model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[0]=model.arithm(orientationP[i-1][j],"=",2),c[0]=model.member(orientationP[i-1][j],new int [] {0,1,3}));
-							else if(numberN==2)model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[0]=model.arithm(orientationP[i-1][j],"=",0),c[0]=model.arithm(orientationP[i-1][j],"=",1));
-							else if(numberN==3)model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[0]=model.member(orientationP[i-1][j],new int [] {1,2,3}),c[0]=model.arithm(orientationP[i-1][j],"=",0));
-							else if(numberN==4){c[0]=model.arithm(orientationP[i][j],op2,n); model.post(c[0]);}
-							else model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[0]=model.member(orientationP[i-1][j],new int[]{1,2}),c[0]=model.member(orientationP[i-1][j],new int[]{0,3}));
-						}
+				Constraint [] c1= new Constraint[4];
+				//for each square define an array of square that is of size equal to the number of side can be connected
+				//// initialize the values for each square connections with neighbor must be connected
+				if(i != 0) {
+					numberN = grid[i-1][j].getNumber();
+					if(number==0) {
+						if(numberN==0 || numberN==3)  {c[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i-1][j],"=",0));c1[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i-1][j],"=",0));}
+						else if(numberN==1) {c[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i-1][j],"!=",2));c1[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i-1][j],"!=",2));}
+						else if(numberN==2 || numberN==4) {c[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i-1][j],"!=",0));c1[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i-1][j],"!=",0));}
+						else {c[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.member(orientationP[i-1][j],new int[] {0,3}));c1[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.member(orientationP[i-1][j],new int[] {0,3}));}
+					}else if(number==5) {
+						if(numberN==0||numberN==3) {c[0]=model.and(model.member(orientationP[i][j],new int[] {0,3}),model.arithm(orientationP[i-1][j],"!=",0));c1[0]=model.and(model.member(orientationP[i][j],new int[] {1,2}),model.arithm(orientationP[i-1][j],"=",0));}
+						else if(numberN==1) {c[0]=model.and(model.member(orientationP[i][j],new int[] {0,3}),model.arithm(orientationP[i-1][j],"=",2));c1[0]=model.and(model.member(orientationP[i][j],new int[] {1,2}),model.arithm(orientationP[i-1][j],"!=",2));}
+						else if(numberN==2 ||numberN==4) {c[0]=model.and(model.member(orientationP[i][j],new int[] {0,3}),model.arithm(orientationP[i-1][j],"=",0));c1[0]=model.and(model.member(orientationP[i][j],new int[] {1,2}),model.arithm(orientationP[i-1][j],"!=",0));}
+						else {c[0]=model.and(model.member(orientationP[i][j],new int[] {0,3}),model.member(orientationP[i-1][j],new int[]{1,2}));c1[0]=model.and(model.member(orientationP[i][j],new int[] {1,2}),model.member(orientationP[i-1][j],new int[]{0,3}));}
 					}else {
-						if(number==1) c[0]=model.arithm(orientationP[i][j],"!=",0);
-						else if(number==2) c[0]=model.arithm(orientationP[i][j],"=",1);
-						else if(number==3) c[0]=model.arithm(orientationP[i][j],"=",2);
-						else if(number==4) c[0]=model.arithm(orientationP[i][j],"!=",0);
-						else c[0]=model.member(orientationP[i][j],new int [] {1,2});
-						model.post(c[0]);
+						if(number==1 ||number==2 ||number==4) {n=0;op1="!="; op2="=";}
+						else if(number==3) {n=2;op1="=";op2="!=";}
+						if(numberN==0 ||numberN==3) {c[0]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i-1][j],"!=",0));c1[0]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i-1][j],"=",0));}
+						else if(numberN==1) {c[0]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i-1][j],"=",2));c1[0]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i-1][j],"!=",2));}
+						else if(numberN==2 ||numberN==4){c[0]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i-1][j],"=",0));c1[0]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i-1][j],"!=",0));}
+						else {c[0]=model.and(model.arithm(orientationP[i][j],op2,n),model.member(orientationP[i-1][j],new int[]{1,2}));c1[0]=model.and(model.arithm(orientationP[i][j],op1,n),model.member(orientationP[i-1][j],new int[]{0,3}));}
 					}
-
-					if(i != height-1) {
-						numberN = grid[i+1][j].getNumber();
-						if(number==5) {
-							if(numberN==0){ c[2]=model.member(orientationP[i][j],new int[] {0,3}); model.post(c[2]);}
-							else if(numberN==1) model.ifThenElse(model.member(orientationP[i][j],new int[] {1,2}),c[2]=model.arithm(orientationP[i+1][j],"=",0),c[2]=model.member(orientationP[i+1][j],new int[] {1,2,3}));
-							else if(numberN==2) model.ifThenElse(model.member(orientationP[i][j],new int[] {1,2}),c[2]=model.arithm(orientationP[i+1][j],"=",0),c[2]=model.arithm(orientationP[i+1][j],"=",1));
-							else if(numberN==3) model.ifThenElse(model.member(orientationP[i][j],new int[] {1,2}),c[2]=model.member(orientationP[i+1][j],new int[] {0,1,3}),c[2]=model.arithm(orientationP[i+1][j],"=",2));
-							else if(numberN==4){ c[2]=model.member(orientationP[i][j],new int[] {1,2}); model.post(c[2]);}
-							else model.ifThenElse(model.member(orientationP[i][j],new int[] {1,2}),c[2]=model.member(orientationP[i+1][j],new int[]{0,3}),c[2]=model.member(orientationP[i+1][j],new int[]{1,2}));
-						}else {
-							if(number==1) {n=2;op1="!=";op2="=";}
-							else if(number==2 ||number==4) {n=0;op1="!=";op2="=";}
-							else if(number==3) {n=0;op1="=";op2="!=";}
-							if(numberN==0){ c[2]=model.arithm(orientationP[i][j],op1,n); model.post(c[2]);}
-							else if(numberN==1) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[2]=model.arithm(orientationP[i+1][j],"=",0),c[2]=model.member(orientationP[i+1][j],new int[] {1,2,3}));
-							else if(numberN==2) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[2]=model.arithm(orientationP[i+1][j],"=",0),c[2]=model.arithm(orientationP[i+1][j],"=",1));
-							else if(numberN==3) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[2]=model.member(orientationP[i+1][j],new int[] {0,1,3}),c[2]=model.arithm(orientationP[i+1][j],"=",2));
-							else if(numberN==4){ c[2]=model.arithm(orientationP[i][j],op2,n); model.post(c[2]);}
-							else model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[2]=model.member(orientationP[i+1][j],new int[]{0,3}),c[2]=model.member(orientationP[i+1][j],new int[]{1,2}));
-						}
-					}else {
-						if(number==1) c[2]=model.arithm(orientationP[i][j],"!=",2);
-						else if(number==2) c[2]=model.arithm(orientationP[i][j],"=",1);
-						else if(number==3) c[2]=model.arithm(orientationP[i][j],"=",0);
-						else if(number==4) c[2]=model.arithm(orientationP[i][j],"!=",0);
-						else c[2]=model.member(orientationP[i][j],new int [] {0,3});
-						model.post(c[2]);
-					}
-
-					if(j != 0) {
-						numberN = grid[i][j-1].getNumber();
-						if(number==5) {
-							if(numberN==0) {c[3]=model.member(orientationP[i][j],new int[] {0,1}); model.post(c[3]);}
-							else if(numberN==1) model.ifThenElse(model.member(orientationP[i][j],new int[] {1,2}),c[3]=model.arithm(orientationP[i][j-1],"=",1),c[3]=model.member(orientationP[i][j-1],new int[] {0,1,2}));
-							else if(numberN==2) model.ifThenElse(model.member(orientationP[i][j],new int[] {1,2}),c[3]=model.arithm(orientationP[i][j-1],"=",1),c[3]=model.arithm(orientationP[i][j-1],"=",0));
-							else if(numberN==3) model.ifThenElse(model.member(orientationP[i][j],new int[] {1,2}),c[3]=model.arithm(orientationP[i][j-1],"!=",3),c[3]=model.arithm(orientationP[i][j-1],"=",3));
-							else if(numberN==4) {c[3]=model.member(orientationP[i][j],new int[] {1,2}); model.post(c[3]);}
-							else model.ifThenElse(model.member(orientationP[i][j],new int[] {1,2}),c[3]=model.member(orientationP[i][j-1],new int[]{0,1}),c[3]=model.member(orientationP[i][j-1],new int[]{1,3}));
-						}else {
-							if(number==1) { n=3;;op1="!=";op2="=";}
-							else if(number==2) {n=1;op1="!=";op2="=";}
-							else if(number==3) {n=1;op1="=";op2="!=";}
-							else if(number==4) {n=0;op1="!=";op2="=";}
-							if(numberN==0) {c[3]=model.arithm(orientationP[i][j],op1,n); model.post(c[3]);}
-							else if(numberN==1) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[3]=model.arithm(orientationP[i][j-1],"=",1),c[3]=model.member(orientationP[i][j-1],new int[] {0,1,2}));
-							else if(numberN==2) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[3]=model.arithm(orientationP[i][j-1],"=",1),c[3]=model.arithm(orientationP[i][j-1],"=",0));
-							else if(numberN==3) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[3]=model.arithm(orientationP[i][j-1],"!=",3),c[3]=model.arithm(orientationP[i][j-1],"=",3));
-							else if(numberN==4) {c[3]=model.arithm(orientationP[i][j],op2,n); model.post(c[3]);}
-							else model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[3]=model.member(orientationP[i][j-1],new int[]{0,1}),c[3]=model.member(orientationP[i][j-1],new int[]{1,3}));
-						}
-					}else {
-
-						if(number==1) c[3]=model.arithm(orientationP[i][j],"!=",3);
-						else if(number==2) c[3]=model.arithm(orientationP[i][j],"=",0);
-						else if(number==3) c[3]=model.arithm(orientationP[i][j],"=",1);
-						else if(number==4) c[3]=model.arithm(orientationP[i][j],"!=",0);
-						else if(number==5) c[3]=model.member(orientationP[i][j],new int [] {0,1});
-						model.post(c[3]);
-					}
-
-					if(j != width-1) {
-						numberN = grid[i][j+1].getNumber();
-						if(number==5) {
-							if(numberN==0) {c[1]=model.member(orientationP[i][j],new int[] {2,3}); model.post(c[1]);}
-							else if(numberN==1) model.ifThenElse(model.member(orientationP[i][j],new int[] {0,1}),c[1]=model.arithm(orientationP[i][j+1],"=",3),c[1]=model.member(orientationP[i][j+1],new int[] {0,1,2}));
-							else if(numberN==2) model.ifThenElse(model.member(orientationP[i][j],new int[] {0,1}),c[1]=model.arithm(orientationP[i][j+1],"=",1),c[1]=model.arithm(orientationP[i][j+1],"=",0));
-							else if(numberN==3) model.ifThenElse(model.member(orientationP[i][j],new int[] {0,1}),c[1]=model.arithm(orientationP[i][j+1],"!=",1),c[1]=model.arithm(orientationP[i][j+1],"=",1));
-							else if(numberN==4){c[1]=model.member(orientationP[i][j],new int[] {0,1}); model.post(c[1]);}
-							else model.ifThenElse(model.member(orientationP[i][j],new int[] {0,1}),c[1]=model.member(orientationP[i][j+1],new int[]{2,3}),c[1]=model.member(orientationP[i][j+1],new int[]{0,1}));
-						}else {
-							if(number==1 || number==2) { n=1;op1="!=";op2="=";}
-							else if(number==3) {n=3;op1="=";op2="!=";}
-							else if(number==4){ n=0;op1="!=";op2="=";}
-							if(numberN==0) {c[1]=model.arithm(orientationP[i][j],op1,n); model.post(c[1]);}
-							else if(numberN==1) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[1]=model.arithm(orientationP[i][j+1],"=",3),c[1]=model.member(orientationP[i][j+1],new int[] {0,1,2}));
-							else if(numberN==2) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[1]=model.arithm(orientationP[i][j+1],"=",1),c[1]=model.arithm(orientationP[i][j+1],"=",0));
-							else if(numberN==3) model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[1]=model.arithm(orientationP[i][j+1],"!=",1),c[1]=model.arithm(orientationP[i][j+1],"=",1));
-							else if(numberN==4){c[1]=model.arithm(orientationP[i][j],op2,n); model.post(c[1]);}
-							else model.ifThenElse(model.arithm(orientationP[i][j],op2,n),c[1]=model.member(orientationP[i][j+1],new int[]{2,3}),c[1]=model.member(orientationP[i][j+1],new int[]{0,1}));
-						}
-					}else {
-						if(number==1) c[1]=model.arithm(orientationP[i][j],"!=",1);
-						else if(number==2) c[1]=model.arithm(orientationP[i][j],"=",0);
-						else if(number==3) c[1]=model.arithm(orientationP[i][j],"=",3);
-						else if(number==4) c[1]=model.arithm(orientationP[i][j],"!=",0);
-						else c[1]=model.member(orientationP[i][j],new int [] {2,3});
-						model.post(c[1]);
-					}
+				}else {
+					if(number==0) {c[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.trueConstraint());c1[0]=model.and(model.arithm(orientationP[i][j],"!=",0),model.falseConstraint());}
+					else if(number==1||numberN==4) {c[0]=model.and(model.arithm(orientationP[i][j],"!=",0),model.trueConstraint());c1[0]=model.and(model.arithm(orientationP[i][j],"=",0),model.falseConstraint());}
+					else if(number==2) {c[0]=model.and(model.arithm(orientationP[i][j],"=",1),model.trueConstraint());c1[0]=model.and(model.arithm(orientationP[i][j],"!=",1),model.falseConstraint());}
+					else if(number==3) {c[0]=model.and(model.arithm(orientationP[i][j],"=",2),model.trueConstraint());c1[0]=model.and(model.arithm(orientationP[i][j],"!=",2),model.falseConstraint());}
+					else {c[0]=model.and(model.member(orientationP[i][j],new int [] {1,2}),model.trueConstraint());c1[0]=model.and(model.member(orientationP[i][j],new int [] {0,3}),model.falseConstraint());}
 				}
+
+				if(i != height-1) {
+					numberN = grid[i+1][j].getNumber();
+					if(number==0) {
+						if(numberN==0)  {c[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i+1][j],"=",0));c1[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i+1][j],"=",0));}
+						else if(numberN==1 ||numberN==2 ||numberN==4) {c[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i+1][j],"!=",0));c1[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i+1][j],"!=",0));}
+						else if(numberN==3) {c[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i+1][j],"=",2));c1[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i+1][j],"=",2));}
+						else {c[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.member(orientationP[i+1][j],new int[]{1,2}));c1[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.member(orientationP[i+1][j],new int[]{1,2}));}
+
+					}else if(number==5) {
+						if(numberN==0) {c[2]=model.and(model.member(orientationP[i][j],new int[] {1,2}),model.arithm(orientationP[i+1][j],"!=",0));c1[2]=model.and(model.member(orientationP[i][j],new int[] {0,3}),model.arithm(orientationP[i+1][j],"=",0));}
+						else if(numberN==1 ||numberN==2 ||numberN==4 ) {c[2]=model.and(model.member(orientationP[i][j],new int[] {1,2}),model.arithm(orientationP[i+1][j],"=",0));c1[2]=model.and(model.member(orientationP[i][j],new int[] {0,3}),model.arithm(orientationP[i+1][j],"!=",0));}
+						else if(numberN==3) {c[2]=model.and(model.member(orientationP[i][j],new int[] {1,2}),model.arithm(orientationP[i+1][j],"!=",2));c1[2]=model.and(model.member(orientationP[i][j],new int[] {0,3}),model.arithm(orientationP[i+1][j],"=",2));}
+						else {c[2]=model.and(model.member(orientationP[i][j],new int[] {1,2}),model.member(orientationP[i+1][j],new int[]{0,3}));c1[2]=model.and(model.member(orientationP[i][j],new int[] {0,3}),model.member(orientationP[i+1][j],new int[]{1,2}));}
+
+					}else {
+						if(number==1) {n=2;op1="!=";op2="=";}
+						else if(number==2 ||number==4) {n=0;op1="!=";op2="=";}
+						else if(number==3) {n=0;op1="=";op2="!=";}
+						if(numberN==0) {c[2]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i+1][j],"!=",0));c1[2]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i+1][j],"=",0));}
+						else if(numberN==1 ||numberN==2 ||numberN==4) {c[2]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i+1][j],"=",0));c1[2]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i+1][j],"!=",0));}
+						else if(numberN==3) {c[2]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i+1][j],"!=",2));c1[2]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i+1][j],"=",2));}
+						else {c[2]=model.and(model.arithm(orientationP[i][j],op2,n),model.member(orientationP[i+1][j],new int[]{0,3}));c1[2]=model.and(model.arithm(orientationP[i][j],op1,n),model.member(orientationP[i+1][j],new int[]{1,2}));}
+					}
+				}else {
+					if(number==0||numberN==3) {c[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.trueConstraint());c1[2]=model.and(model.arithm(orientationP[i][j],"!=",0),model.falseConstraint());}
+					else if(number==1) {c[2]=model.and(model.arithm(orientationP[i][j],"!=",2),model.trueConstraint());c1[2]=model.and(model.arithm(orientationP[i][j],"=",2),model.falseConstraint());}
+					else if(number==2) {c[2]=model.and(model.arithm(orientationP[i][j],"=",1),model.trueConstraint());c1[2]=model.and(model.arithm(orientationP[i][j],"!=",1),model.falseConstraint());}
+					else if(number==4) {c[2]=model.and(model.arithm(orientationP[i][j],"!=",0),model.trueConstraint());c1[2]=model.and(model.arithm(orientationP[i][j],"=",0),model.falseConstraint());}
+					else {c[2]=model.and(model.member(orientationP[i][j],new int [] {0,3}),model.trueConstraint());c1[2]=model.and(model.member(orientationP[i][j],new int [] {1,2}),model.falseConstraint());}
+				}
+
+				if(j != 0) {
+					numberN = grid[i][j-1].getNumber();
+					if(number==0) {
+						if(numberN==0) {c[3]=model.and(model.arithm(orientationP[i][j-1],"=",0),model.trueConstraint());c1[3]=model.and(model.arithm(orientationP[i][j-1],"=",0),model.falseConstraint());}
+						else if(numberN==1 ||numberN==2) {c[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j-1],"!=",1));c1[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j-1],"!=",1));}
+						else if(numberN==3) {c[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j-1],"=",3));c1[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j-1],"=",3));}
+						else if(numberN==4) {c[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j-1],"!=",0));c1[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j-1],"!=",0));}
+						else {c[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.member(orientationP[i][j-1],new int[]{2,3}));c1[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.member(orientationP[i][j-1],new int[]{2,3}));}
+
+					}else if(number==5) {
+						if(numberN==0) {c[3]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j-1],"!=",0));c1[3]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j-1],"=",0));}
+						else if(numberN==1||numberN==2) {c[3]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j-1],"=",1));c1[3]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j-1],"!=",1));}
+						else if(numberN==3){c[3]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j-1],"!=",3));c1[3]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j-1],"=",3));}
+						else if(numberN==4) {c[3]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j-1],"=",0));c1[3]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j-1],"!=",0));}
+						else {c[3]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.member(orientationP[i][j-1],new int[]{0,1}));c1[3]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.member(orientationP[i][j-1],new int[]{2,3}));}
+					}else {
+						if(number==1) { n=3;;op1="!=";op2="=";}
+						else if(number==2) {n=1;op1="!=";op2="=";}
+						else if(number==3) {n=1;op1="=";op2="!=";}
+						else if(number==4) {n=0;op1="!=";op2="=";}
+						if(numberN==0) {c[3]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j-1],"!=",0));c1[3]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j-1],"=",0));}
+						else if(numberN==1||numberN==2) {c[3]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j-1],"=",1));c1[3]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j-1],"!=",1));}
+						else if(numberN==3){c[3]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j-1],"!=",3));c1[3]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j-1],"=",3));}
+						else if(numberN==4){c[3]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j-1],"=",0));c1[3]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j-1],"!=",0));}
+						else{c[3]=model.and(model.arithm(orientationP[i][j],op2,n),model.member(orientationP[i][j-1],new int[]{0,1}));c1[3]=model.and(model.arithm(orientationP[i][j],op1,n),model.member(orientationP[i][j-1],new int[]{2,3}));} 
+					}
+				}else {
+					if(number==0 ||number==2) {c[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.trueConstraint());c1[3]=model.and(model.arithm(orientationP[i][j],"!=",0),model.falseConstraint());}
+					else if(number==1) {c[3]=model.and(model.arithm(orientationP[i][j],"!=",3),model.trueConstraint());c1[3]=model.and(model.arithm(orientationP[i][j],"=",3),model.falseConstraint());}
+					else if(number==3) {c[3]=model.and(model.arithm(orientationP[i][j],"=",1),model.trueConstraint());c1[3]=model.and(model.arithm(orientationP[i][j],"!=",1),model.falseConstraint());}
+					else if(number==4) {c[3]=model.and(model.arithm(orientationP[i][j],"!=",0),model.trueConstraint());c1[3]=model.and(model.arithm(orientationP[i][j],"=",0),model.falseConstraint());}
+					else if(number==5) {c[3]=model.and(model.member(orientationP[i][j],new int [] {0,1}),model.trueConstraint());c1[3]=model.and(model.member(orientationP[i][j],new int [] {2,3}),model.falseConstraint());}
+
+				}
+				if(j != width-1) {
+					numberN = grid[i][j+1].getNumber();
+					if(number==0) {
+						if(numberN==0)c[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j+1],"=",0));
+						else if(numberN==1)c[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j+1],"!=",3));
+						else if(numberN==2) c[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j+1],"!=",1));
+						else if(numberN==3) c[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j+1],"=",1));
+						else if(numberN==4)c[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.arithm(orientationP[i][j+1],"!=",0));
+						else c[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.member(orientationP[i][j+1],new int[]{0,1}));
+						c1[1]=c[1];
+					}else if(number==5) {
+						if(numberN==0){c[1]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j+1],"!=",0));c1[1]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j+1],"=",0));}
+						else if(numberN==1){c[1]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j+1],"=",3));c1[1]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j+1],"!=",3));}
+						else if(numberN==2){c[1]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j+1],"=",1));c1[1]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j+1],"!=",1));}
+						else if(numberN==3) {c[1]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j+1],"!=",1));c1[1]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j+1],"=",1));}
+						else if(numberN==4){c[1]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.arithm(orientationP[i][j+1],"=",0));c1[1]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.arithm(orientationP[i][j+1],"!=",0));}
+						else{c[1]=model.and(model.member(orientationP[i][j],new int[] {0,1}),model.member(orientationP[i][j+1],new int[]{2,3}));c1[1]=model.and(model.member(orientationP[i][j],new int[] {2,3}),model.member(orientationP[i][j+1],new int[]{0,1}));} 
+
+					}else {
+						if(number==1 || number==2) { n=1;op1="!=";op2="=";}
+						else if(number==3) {n=3;op1="=";op2="!=";}
+						else if(number==4){ n=0;op1="!=";op2="=";}
+						if(numberN==0){c[1]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j+1],"!=",0));c1[1]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j+1],"=",0));}
+						else if(numberN==1){c[1]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j+1],"=",3));c1[1]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j+1],"!=",3));}
+						else if(numberN==2){c[1]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j+1],"=",1));c1[1]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j+1],"!=",1));}
+						else if(numberN==3) {c[1]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j+1],"!=",1));c1[1]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j+1],"=",1));}
+						else if(numberN==4){c[1]=model.and(model.arithm(orientationP[i][j],op2,n),model.arithm(orientationP[i][j+1],"=",0));c1[1]=model.and(model.arithm(orientationP[i][j],op1,n),model.arithm(orientationP[i][j+1],"!=",0));}
+						else{c[1]=model.and(model.arithm(orientationP[i][j],op2,n),model.member(orientationP[i][j+1],new int[]{2,3}));c1[1]=model.and(model.arithm(orientationP[i][j],op1,n),model.member(orientationP[i][j+1],new int[]{0,1}));} 
+
+					}
+				}else {
+					if(number==0) { c[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.trueConstraint()); c1[1]=model.and(model.arithm(orientationP[i][j],"!=",0),model.falseConstraint());}
+					else if(number==1) {c[1]=model.and(model.arithm(orientationP[i][j],"!=",1),model.trueConstraint()); c1[1]=model.and(model.arithm(orientationP[i][j],"=",1),model.falseConstraint());}
+					else if(number==2) {c[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.trueConstraint()); c1[1]=model.and(model.arithm(orientationP[i][j],"!=",0),model.falseConstraint());}
+					else if(number==3) {c[1]=model.and(model.arithm(orientationP[i][j],"=",3),model.trueConstraint()); c1[1]=model.and(model.arithm(orientationP[i][j],"!=",3),model.falseConstraint());}
+					else if(number==4) {c[1]=model.and(model.arithm(orientationP[i][j],"!=",0),model.trueConstraint()); c1[1]=model.and(model.arithm(orientationP[i][j],"=",0),model.falseConstraint());}
+					else {c[1]=model.and(model.member(orientationP[i][j],new int [] {2,3}),model.trueConstraint());c1[1]=model.and(model.member(orientationP[i][j],new int [] {0,1}),model.falseConstraint());}
+
+				}
+
+				model.or(c[0],c1[0]).post();
+				model.or(c[1],c1[1]).post();
+				model.or(c[2],c1[2]).post();
+				model.or(c[3],c1[3]).post();
 
 			}
 		}
+
+
+
 		boolean solved=model.getSolver().solve();
 		System.out.println(solved);
 		for (int i = 0; i < height; i++) {
@@ -405,10 +429,11 @@ public class Grid
 	public static void main(String[] args)
 	{
 		/* Generator test*/
-		/*Grid g = Grid.generateGrid(5,5);
-		g.generateFile("niveau1.txt");
-		g.printGrid();
-		new Gui(g);*/
+		/*Grid g1 = Grid.generateGrid(5,5);
+		g1.generateFile("niveau1.txt");
+
+		g1.printGrid();
+		new Gui(g1);*/
 
 
 		/*Check test*/
@@ -417,7 +442,7 @@ public class Grid
 		new Gui(grid);*/
 
 		/*Solver test*/
-		Grid g = Grid.generateGridWithFile("test.txt");
+		Grid g = Grid.generateGridWithFile("instances/public/grid_32x32_dist.6_vflip.false_hflip.false_messedup.true_id.0.dat");
 		g.printGrid();
 		g.solve();
 		//new Gui(g);

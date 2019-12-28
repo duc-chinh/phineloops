@@ -33,7 +33,7 @@ public class Main {
 	private static boolean solve(String inputFile, String outputFile){
 		Grid g = Grid.generateGridWithFile(inputFile);
 		boolean solved= g.solve();
-		g.generateFile(outputFile);
+		if(solved)g.generateFile(outputFile);
 		return solved;
 	}
 

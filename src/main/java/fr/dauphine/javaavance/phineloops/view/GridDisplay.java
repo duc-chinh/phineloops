@@ -30,8 +30,6 @@ public class GridDisplay extends JPanel
 		{
 			for(int x = 0; x < level.getHeight(); x++)
 				level.getPiece(x, y).drawer.draw(g);
-			
-			System.out.println();
 		}
 		return;
 	}

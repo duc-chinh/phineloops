@@ -21,7 +21,8 @@ public class GridDisplay extends JPanel
 			for(int j=0;j<level.getHeight();j++)
 			{
 				level.getPiece(i,j).drawer.draw(g);
-			}
+				System.out.print(level.getPiece(i, j).toString());
+			}System.out.println();
 		}
 	}
 }

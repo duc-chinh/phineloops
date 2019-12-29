@@ -1,11 +1,16 @@
 package fr.dauphine.javaavance.phineloops; 
 
+import java.awt.Window;
+
+import javax.sql.CommonDataSource;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Option.Builder;
 
 import fr.dauphine.javaavance.phineloops.model.Grid;
 import fr.dauphine.javaavance.phineloops.view.Gui;
@@ -24,16 +29,14 @@ public class Main {
 	private static void generate(int width, int height, String outputFile){
 		// generate grid and store it to outputFile...
 		Grid g = Grid.generateGrid(width, height);
-		g.printGrid();
 		g.generateFile(outputFile);
-		//new Gui(g);
 
 	}
 
 	private static boolean solve(String inputFile, String outputFile){
 		Grid g = Grid.generateGridWithFile(inputFile);
 		boolean solved= g.solve();
-		if(solved)g.generateFile(outputFile);
+		g.generateFile(outputFile);
 		return solved;
 	}
 
@@ -56,7 +59,7 @@ public class Main {
 		options.addOption("o", "output", true, "Store the generated or solved grid in <arg>. (Use only with --generate and --solve.)");
 		options.addOption("t", "threads", true, "Maximum number of solver threads. (Use only with --solve.)");
 		options.addOption("x", "nbcc", true, "Maximum number of connected components. (Use only with --generate.)");
-		options.addOption("G", "gui", true, "Run with the graphic user interface.");
+		options.addOption("G", "gui", false, "Run with the graphic user interface.");
 		options.addOption("h", "help", false, "Display this help");
 
 		try {
@@ -72,31 +75,46 @@ public class Main {
 			if( cmd.hasOption( "g" ) ) {
 				System.out.println("Running phineloops generator.");
 				String[] gridformat = cmd.getOptionValue( "g" ).split("x");
-				width = Integer.parseInt(gridformat[0]);
-				height = Integer.parseInt(gridformat[1]); 
+				width = Integer.parseInt(gridformat[1]);
+				height = Integer.parseInt(gridformat[0]); 
 				if(! cmd.hasOption("o")) throw new ParseException("Missing mandatory --output argument.");
 				outputFile = cmd.getOptionValue( "o" );
-
-				generate(width, height, outputFile); 
+				if(cmd.hasOption("G")) {
+					Grid g =Grid.generateGrid(height, width);
+					g.generateFile(outputFile);
+					new Gui(g);
+				}else {
+					generate(width, height, outputFile);  
+					System.exit(0); // exit with success   
+				}
 			}
 			else if( cmd.hasOption( "s" ) ) {
 				System.out.println("Running phineloops solver.");
 				inputFile = cmd.getOptionValue( "s" );
 				if(! cmd.hasOption("o")) throw new ParseException("Missing mandatory --output argument.");      
 				outputFile = cmd.getOptionValue( "o" );
-
-				boolean solved = solve(inputFile, outputFile); 
-
-				System.out.println("SOLVED: " + solved);            
+				if(cmd.hasOption("G")) {
+					Grid g = Grid.generateGridWithFile(inputFile);
+					g.solve();
+					g.generateFile(outputFile);
+					new Gui(g);
+				}else {
+					boolean solved = solve(inputFile, outputFile); 
+					System.out.println("SOLVED: " + solved);   
+					System.exit(0); // exit with success   
+				}
 			}
 
 			else if( cmd.hasOption( "c" )) {
 				System.out.println("Running phineloops checker.");
 				inputFile = cmd.getOptionValue( "c" );
-
 				boolean solved = check(inputFile); 
-
-				System.out.println("SOLVED: " + solved);           
+				if(cmd.hasOption("G")) {
+					new Gui(Grid.generateGridWithFile(inputFile));
+				}else {
+					System.out.println("SOLVED: " + solved);  
+					System.exit(0); // exit with success   
+				}
 			}
 			else {
 				throw new ParseException("You must specify at least one of the following options: -generate -check -solve ");           
@@ -108,6 +126,6 @@ public class Main {
 			System.exit(1); // exit with error      
 		}
 
-		System.exit(0); // exit with success                            
+
 	}
 }

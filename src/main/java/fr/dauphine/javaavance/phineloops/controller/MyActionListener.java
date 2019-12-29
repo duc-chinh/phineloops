@@ -19,7 +19,7 @@ public class MyActionListener  implements ActionListener{
 		g.getLevel().solve();
 		if(g.getLevel().solve()) g.getLeveldisplay().repaint();
 		else {
-			JOptionPane.showMessageDialog(g.getFrame(), "No solution for this level!",
+			JOptionPane.showMessageDialog(g, "No solution for this level!",
 					"PhineLoops Game - Sorry!", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}

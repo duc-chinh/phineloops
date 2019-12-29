@@ -4,14 +4,23 @@ import java.awt.Graphics;
 
 import fr.dauphine.javaavance.phineloops.model.Empty;
 
-public class EmptyDrawer extends Drawer {
-	public EmptyDrawer(Empty empty) {
-		// TODO Auto-generated constructor stub
+/**
+ * The EmptyDrawer class defines the Empty piece to be displayed on the GUI.
+ * @see fr.dauphine.javaavance.phineloops.model.Empty
+ * 
+ * @author Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
+ */
+public class EmptyDrawer extends Drawer 
+{
+	public EmptyDrawer(Empty empty) 
+	{
 		super(empty);
 	}
+	
 	@Override
-	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
+	public void draw(Graphics g) 
+	{
 		super.draw(g);
+		return;
 	}
 }

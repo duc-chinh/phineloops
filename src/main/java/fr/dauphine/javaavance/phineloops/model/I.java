@@ -3,12 +3,18 @@ package fr.dauphine.javaavance.phineloops.model;
 import java.util.Random;
 import fr.dauphine.javaavance.phineloops.view.IDrawer;
 
+/**
+ * The I class is a Piece corresponding to the 2-sides piece.
+ * @see Piece
+ * 
+ * @author Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
+ */
 public class I extends Piece
 {
 	public I(int orientation, int x, int y)
 	{
 		super(2, 2, orientation, x, y);
-		super.drawer=new IDrawer(this);
+		super.drawer = new IDrawer(this);
 	}
 	
 	@Override

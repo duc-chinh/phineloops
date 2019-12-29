@@ -2,12 +2,18 @@ package fr.dauphine.javaavance.phineloops.model;
 
 import fr.dauphine.javaavance.phineloops.view.EmptyDrawer;
 
+/**
+ * The Empty class is a Piece corresponding to an empty spot.
+ * @see Piece
+ * 
+ * @author Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
+ */
 public class Empty extends Piece
 {
 	public Empty(int x, int y)
 	{
 		super(0, 0, 0, x, y);
-		super.drawer=new EmptyDrawer(this);
+		super.drawer = new EmptyDrawer(this);
 	}
 	
 	@Override

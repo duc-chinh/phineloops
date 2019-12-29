@@ -2,12 +2,18 @@ package fr.dauphine.javaavance.phineloops.model;
 
 import fr.dauphine.javaavance.phineloops.view.XDrawer;
 
+/**
+ * The X class is a Piece corresponding to the 4-sides piece.
+ * @see Piece
+ * 
+ * @author Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
+ */
 public class X extends Piece
 {
 	public X(int x, int y)
 	{
 		super(4, 0, 0, x, y);
-		super.drawer=new XDrawer(this);
+		super.drawer = new XDrawer(this);
 	}
 	
 	@Override

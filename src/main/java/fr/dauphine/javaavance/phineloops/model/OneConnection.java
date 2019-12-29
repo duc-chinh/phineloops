@@ -2,12 +2,18 @@ package fr.dauphine.javaavance.phineloops.model;
 
 import fr.dauphine.javaavance.phineloops.view.OneConnectionDrawer;
 
+/**
+ * The OneConnection class is a Piece corresponding to the 1-side piece.
+ * @see Piece
+ * 
+ * @author Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
+ */
 public class OneConnection extends Piece
 {
 	public OneConnection(int orientation, int x, int y)
 	{
 		super(1, 4, orientation, x, y);
-		super.drawer=new OneConnectionDrawer(this);
+		super.drawer = new OneConnectionDrawer(this);
 	}
 	
 	@Override

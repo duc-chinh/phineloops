@@ -1,26 +1,27 @@
 package fr.dauphine.javaavance.phineloops.view;
 
 import java.awt.Graphics;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import fr.dauphine.javaavance.phineloops.model.L;
-import fr.dauphine.javaavance.phineloops.model.Piece;
 
-public class LDrawer extends Drawer{
-	public LDrawer(L l) {
-		// TODO Auto-generated constructor stub
+/**
+ * The LDrawer class defines the 2-sides piece to be displayed on the GUI.
+ * @see fr.dauphine.javaavance.phineloops.model.L
+ * 
+ * @author Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
+ */
+public class LDrawer extends Drawer
+{
+	public LDrawer(L l) 
+	{
 		super(l);
 	}
+	
 	@Override
-	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
+	public void draw(Graphics g) 
+	{
 		super.draw(g);
+		return;
 	}
 
 }

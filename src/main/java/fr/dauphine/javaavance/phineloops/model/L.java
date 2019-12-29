@@ -2,12 +2,18 @@ package fr.dauphine.javaavance.phineloops.model;
 
 import fr.dauphine.javaavance.phineloops.view.LDrawer;
 
+/**
+ * The L class is a Piece corresponding to the 2-sides piece.
+ * @see Piece
+ * 
+ * @author Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
+ */
 public class L extends Piece
 {
 	public L(int orientation, int x, int y)
 	{
 		super(5, 4, orientation, x, y);
-		super.drawer= new LDrawer(this);
+		super.drawer = new LDrawer(this);
 	}
 	
 	@Override

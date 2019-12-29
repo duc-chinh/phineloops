@@ -2,12 +2,18 @@ package fr.dauphine.javaavance.phineloops.model;
 
 import fr.dauphine.javaavance.phineloops.view.TDrawer;
 
+/**
+ * The T class is a Piece corresponding to the 3-sides piece.
+ * @see Piece
+ * 
+ * @author Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
+ */
 public class T extends Piece
 {
 	public T(int orientation, int x, int y)
 	{
 		super(3, 4, orientation, x, y);
-		super.drawer=new TDrawer(this);
+		super.drawer = new TDrawer(this);
 	}
 	
 	@Override

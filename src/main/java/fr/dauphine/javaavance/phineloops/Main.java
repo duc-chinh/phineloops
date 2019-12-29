@@ -22,7 +22,7 @@ import org.apache.commons.cli.ParseException;
  * @param maxcc Maximum number of connected spaces. Unused
  * 
  * @author Bruno Negrevergne, Taoufiq Kounaidi, Léa Ong, Duc-Chinh Pham
- * @version 1.0
+ * @version 2.1
  * @since 2019-12-29
  */
 public class Main
